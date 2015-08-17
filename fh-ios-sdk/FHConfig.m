@@ -21,13 +21,18 @@
     self = [super init];
     if (self) {
         NSString *path =
-            [[NSBundle bundleForClass:[self class]] pathForResource:@"fhconfig" ofType:@"plist"];
+            [[NSBundle mainBundle] pathForResource:@"fhconfig" ofType:@"plist"];
         if (path) {
             self.properties = [NSMutableDictionary dictionaryWithContentsOfFile:path];
         } else {
-            @throw([NSException exceptionWithName:@"fhconfigException"
-                                           reason:@"fhconfig.plist was not located"
-                                         userInfo:nil]);
+            path = [[NSBundle bundleForClass:[self class]] pathForResource:@"fhconfig" ofType:@"plist"];
+            if (path) {
+                self.properties = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+            } else {
+                @throw([NSException exceptionWithName:@"fhconfigException"
+                                               reason:@"fhconfig.plist was not located"
+                                             userInfo:nil]);
+            }
         }
     }
     return self;
